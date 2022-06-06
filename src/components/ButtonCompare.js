@@ -34,9 +34,9 @@ function ButtonCompare(props) {
   }, []);
 
 	useEffect(() => {
-		if(pokemon1) {
+		if(pokemon1!=undefined) {
 			const getAnswer = async () => {
-				const response = await axios.get(pokemon1.type.url);
+				const response = await axios.get(pokemon1.types[0].type.url);
 				setPokemon1Type(response.data);
 				//return response.data;
 			};
@@ -45,9 +45,9 @@ function ButtonCompare(props) {
 		}, []) ; 
 
   useEffect(() => {
-		if(pokemon2) {
+		if(pokemon2!=undefined) {
     const getAnswer = async () => {
-      const response = await axios.get(pokemon2.type.url);
+      const response = await axios.get(pokemon2.types[0].type.url);
       setPokemon2Type(response.data);
       //return response.data;
     };
@@ -59,26 +59,32 @@ function ButtonCompare(props) {
 		if(pokemon1Type && pokemon2Type) {
 			const pokemon1DamageTo = pokemon1Type.damage_relations.double_damage_to;
 			const pokemon2DamageTo = pokemon2Type.damage_relations.double_damage_to;
+      // console.log('poke1-damage-to', pokemon1DamageTo);
+      // console.log('poke2-damage-to', pokemon2DamageTo);
+      // console.log('tipo pokemon1' , pokemon1.types[0].type.name);
+      // console.log('tipo pokemon2' , pokemon2.types[0].type.name);
 
-			if (
+      if (
 				pokemon1DamageTo.find(
-					(pokemon1DamageTo) => pokemon1DamageTo.name === pokemon2Type
-				)
+					(pokemon1DamageTo) => pokemon1DamageTo.name == pokemon2.types[0].type.name)
 			) {
-				setWinner(pokemon1);
-				//	return pokemon1;
+				setWinner(props.pokemon1);
+        console.log('EL ganador es: '+ props.pokemon1);
+			//	return props.pokemon1;
 			} else if (
 				pokemon2DamageTo.find(
-					(pokemon2DamageTo) => pokemon2DamageTo.name === pokemon1Type
-				)
+					(pokemon2DamageTo) => pokemon2DamageTo.name == pokemon1.types[0].type.name)
 			) {
-				setWinner(pokemon2);
-				//	return pokemon2;
+				setWinner(props.pokemon2);
+        console.log('EL ganador es: '+ props.pokemon2);
+      //  return props.pokemon2;
 			} else {
 				setWinner("empate");
-				//	return "Empate";
+        console.log('EL ganador es: '+ "empate");
+			//	return "Empate";
 			}
 		}
+    console.log('Ganador!!! '+ winner);
 	}
   
   return (
