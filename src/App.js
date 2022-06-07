@@ -1,25 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import pokeApiLogo from "./img/pokeapi.png";
 import Pokemon from "./components/Pokemon";
-import ButtonCompare from "./components/ButtonCompare";
+import Form from "./components/Form";
+import axios from "axios";
 
 function App() {
   const [pokemon1Name, setPokemon1Name] = useState("");
   const [pokemon2Name, setPokemon2Name] = useState("");
-  const [pokemon1Submit, setPokemon1Submit] = useState(false);
-  const [pokemon2Submit, setPokemon2Submit] = useState(false);
+  const [pokemon1, setPokemon1] = useState("");
+  const [pokemon2, setPokemon2] = useState("");
+  const [pokemon1Type, setPokemon1Type] = useState("");
+  const [pokemon2Type, setPokemon2Type] = useState("");
+  const [winner, setWinner] = useState("");
 
-  const handleSubmit1 = (e) => {
-    e.preventDefault();
-    alert("You have submitted " + pokemon1Name);
-    setPokemon1Submit(true);
-  };
-  const handleSubmit2 = (e) => {
-    e.preventDefault();
-    alert("You have submitted " + pokemon2Name);
-    setPokemon2Submit(true);
-  };
+  useEffect(() => {
+    if (pokemon1Name !='') {
+    const getAnswer = async () => {
+      const response = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon/${pokemon1Name}`
+      );
+      setPokemon1(response.data);
+    };
+    getAnswer();
+  }
+  }, [pokemon1Name]);
+
+  useEffect(() => {
+   if (pokemon2Name !='') {
+    const getAnswer = async () => {
+      const response = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon/${pokemon2Name}`
+      );
+      setPokemon2(response.data);
+    };
+    getAnswer();
+  }
+  }, [pokemon2Name]);
+
+  useEffect(() => {
+    if (pokemon1 != '') {
+      const getAnswer = async () => {
+        const response = await axios.get(pokemon1.types[0].type.url);
+        setPokemon1Type(response.data);
+      };
+      getAnswer();
+    }
+  }, [pokemon1]);
+
+  useEffect(() => {
+    if (pokemon2 != '') {
+      const getAnswer = async () => {
+        const response = await axios.get(pokemon2.types[0].type.url);
+        setPokemon2Type(response.data);
+      };
+      getAnswer();
+    }
+  }, [pokemon2]);
+
+  function versus() {
+    if (pokemon1Type && pokemon2Type) {
+      const pokemon1DamageTo = pokemon1Type.damage_relations.double_damage_to;
+      const pokemon2DamageTo = pokemon2Type.damage_relations.double_damage_to;
+      if (
+        pokemon1DamageTo.find(
+          (pokemon1DamageTo) =>
+            pokemon1DamageTo.name == pokemon2Type.name
+        )
+      ) {
+        setWinner(pokemon1Name);
+        console.log("The winner is: " + pokemon1Name);
+      } else if (
+        pokemon2DamageTo.find(
+          (pokemon2DamageTo) =>
+            pokemon2DamageTo.name == pokemon1Type.name
+        )
+      ) {
+        setWinner(pokemon2Name);
+        console.log("The winner is: " + pokemon2Name);
+      } else {
+        setWinner("Tie");
+        console.log("It is a " + winner);
+      }
+    }
+    console.log("Winner!!! " + winner);
+  }
 
   return (
     <div className="App">
@@ -28,48 +93,23 @@ function App() {
       </div>
       <div className="main-container">
         <div className="row">
-          <form className="form" onSubmit={handleSubmit1}>
-            <div className="form-control">
-              <label htmlFor="pokemon1Name">Pokemon 1 Name: </label>
-              <input
-                type="text"
-                id="pokemon1Name"
-                name="pokemon1Name"
-                value={pokemon1Name}
-                onChange={(e) => setPokemon1Name(e.target.value)}
-              />
-            </div>
-            <button type="submit">Add pokemon</button>
-          </form>
-
-          <form className="form" onSubmit={handleSubmit2}>
-            <div className="form-control">
-              <label htmlFor="pokemon2Name">Pokemon 2 Name: </label>
-              <input
-                type="text"
-                id="pokemon2Name"
-                name="pokemon2Name"
-                value={pokemon2Name}
-                onChange={(e) => setPokemon2Name(e.target.value)}
-              />
-            </div>
-            <button type="submit">Add pokemon</button>
-          </form>
+          <Form setPokemonName={setPokemon1Name} ></Form>
+          <Form setPokemonName={setPokemon2Name} ></Form>
         </div>
 
         <div className="row">
-          {pokemon1Submit ? <Pokemon name={pokemon1Name}> </Pokemon> : <></>}
-          {pokemon2Submit ? <Pokemon name={pokemon2Name}> </Pokemon> : <></>}
+          {pokemon1? <Pokemon name={pokemon1Name} pokemon={pokemon1} win={pokemon1Name==winner || winner =='Tie'}> </Pokemon> : <></>}
+
+          {pokemon2? <Pokemon name={pokemon2Name} pokemon={pokemon2} win={pokemon2Name==winner || winner =='Tie'}> </Pokemon> : <></>}
         </div>
 
-        <div className="row">
-          {pokemon1Submit && pokemon2Submit ? (
-            <ButtonCompare pokemon1={pokemon1Name} pokemon2={pokemon2Name}>
-              Comparar
-            </ButtonCompare>
-          ) : (
-            <></>
-          )}
+        <div className="row">     
+            <button
+              className="button-compare"
+              onClick={(e) => versus()}
+            >
+              Versus
+            </button> 
         </div>
       </div>
     </div>

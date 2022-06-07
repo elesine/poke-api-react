@@ -18,10 +18,13 @@
     height: 250px;
     width: 280px;
     margin: 30px;
-
   }
+
   .pokemon-name {
     font-size: 1.3rem;
     text-align: center;
+  }
 
+  .winner {
+    background-color: #feca1b;
   }

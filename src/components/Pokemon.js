@@ -1,29 +1,15 @@
-import React, { useEffect, useState } from "react";
 import "../styles/Pokemon.css";
-import axios from "axios";
 
-function Pokemon({ name }) {
-  const [pokemon, setPokemon] = useState("");
-
-  useEffect(() => {
-    const getAnswer = async () => {
-      const response = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/${name}`
-      );
-      setPokemon(response.data);
-      // return response.data;
-    };
-    getAnswer();
-  }, []);
-
+function Pokemon({ name, pokemon, win}) {
   return (
-    <div className="pokemon-contenedor">
+    <div className={`pokemon-contenedor ${win? 'winner' :  ''}`.trimEnd()}>
       <p className="pokemon-name">
+        <strong>{win? 'El Ganador es ':''}</strong>
         <strong>{name}</strong>
       </p>
       <img
-        className="pokemon-img"
-        src={pokemon ? pokemon.sprites.other.dream_world.front_default : ""}
+        className='pokemon-img'
+        src={pokemon.sprites.other.dream_world.front_default}
         id={name}
         alt={name}
       />
