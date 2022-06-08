@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import pokeApiLogo from "./img/pokeapi.png";
 import Pokemon from "./components/Pokemon";
-import Form from "./components/Form";
+import PokemonInput from "./components/PokemonInput";
 import axios from "axios";
 
 function App() {
@@ -14,80 +14,46 @@ function App() {
   const [pokemon2Type, setPokemon2Type] = useState("");
   const [winner, setWinner] = useState("");
 
+  const getAnswer = async (url, setPokemon) => {
+    try {
+      const response = await axios.get(url);
+      if (response.status === 200) {
+        setPokemon(response.data);
+      }
+    } catch (error) {
+      console.log("Error Endpoint: ", url);
+      console.log(error);
+      alert(`Error name pokemon. ${error.response.data}`);
+    }
+  };
+
   useEffect(() => {
-    if (pokemon1Name !='') {
-      const getAnswer = async () => {
-        try{
-          const response = await axios.get(
-            `https://pokeapi.co/api/v2/pokemon/${pokemon1Name}`
-          );
-          if(response.status == 200) {
-            setPokemon1(response.data);
-          }
-        }
-        catch (error) {
-          console.log(error);
-          alert(`Error name pokemon. ${error.response.data}`);
-        }
-      };
-      getAnswer();
+    if (pokemon1Name !== "") {
+      getAnswer(
+        `https://pokeapi.co/api/v2/pokemon/${pokemon1Name}`,
+        setPokemon1
+      );
     }
   }, [pokemon1Name]);
 
   useEffect(() => {
-    if (pokemon2Name !='') {
-      const getAnswer = async () => {
-        try{
-          const response = await axios.get(
-            `https://pokeapi.co/api/v2/pokemon/${pokemon2Name}`
-          );
-          if(response.status == 200) {
-            setPokemon2(response.data);
-          }
-        }
-        catch (error) {
-          console.log(error);
-          alert(`Error name pokemon. ${error.response.data}`);
-        }
-      };
-    getAnswer();
-  }
+    if (pokemon2Name !== "") {
+      getAnswer(
+        `https://pokeapi.co/api/v2/pokemon/${pokemon2Name}`,
+        setPokemon2
+      );
+    }
   }, [pokemon2Name]);
 
   useEffect(() => {
-    if (pokemon1 != '') {
-      const getAnswer = async () => {
-        try{
-          const response = await axios.get(pokemon1.types[0].type.url);
-          if(response.status == 200) {
-            setPokemon1Type(response.data);
-          }
-        }
-        catch (error) {
-          console.log(error);
-          alert(`Error finding Pokemon Type. ${error.response.data}`);
-        }
-
-      };
-      getAnswer();
+    if (pokemon1 !== "") {
+      getAnswer(pokemon1.types[0].type.url, setPokemon1Type);
     }
   }, [pokemon1]);
 
   useEffect(() => {
-    if (pokemon2 != '') {
-      const getAnswer = async () => {
-        try{
-          const response = await axios.get(pokemon2.types[0].type.url);
-          if(response.status == 200) {
-            setPokemon2Type(response.data);
-          }
-        }
-        catch (error) {
-          console.log(error);
-          alert(`Error finding Pokemon Type. ${error.response.data}`);
-        }
-      };
-      getAnswer();
+    if (pokemon2 !== "") {
+      getAnswer(pokemon2.types[0].type.url, setPokemon2Type);
     }
   }, [pokemon2]);
 
@@ -97,16 +63,14 @@ function App() {
       const pokemon2DamageTo = pokemon2Type.damage_relations.double_damage_to;
       if (
         pokemon1DamageTo.find(
-          (pokemon1DamageTo) =>
-            pokemon1DamageTo.name == pokemon2Type.name
+          (pokemon1DamageTo) => pokemon1DamageTo.name === pokemon2Type.name
         )
       ) {
         setWinner(pokemon1Name);
         console.log("The winner is: " + pokemon1Name);
       } else if (
         pokemon2DamageTo.find(
-          (pokemon2DamageTo) =>
-            pokemon2DamageTo.name == pokemon1Type.name
+          (pokemon2DamageTo) => pokemon2DamageTo.name === pokemon1Type.name
         )
       ) {
         setWinner(pokemon2Name);
@@ -126,23 +90,30 @@ function App() {
 
       <div className="main-container">
         <div className="row">
-          <Form setPokemonName={setPokemon1Name} ></Form>
-          <Form setPokemonName={setPokemon2Name} ></Form>
+          <PokemonInput setPokemonName={setPokemon1Name} />
+          <PokemonInput setPokemonName={setPokemon2Name} />
         </div>
 
         <div className="row">
-          {pokemon1? <Pokemon name={pokemon1Name} pokemon={pokemon1} win={pokemon1Name==winner || winner =='Tie'}> </Pokemon> : <></>}
+          {pokemon1 ? (
+            <Pokemon
+              pokemon={pokemon1}
+              isWinner={pokemon1Name === winner || winner === "Tie"}
+            />
+          ) : null}
 
-          {pokemon2? <Pokemon name={pokemon2Name} pokemon={pokemon2} win={pokemon2Name==winner || winner =='Tie'}> </Pokemon> : <></>}
+          {pokemon2 ? (
+            <Pokemon
+              pokemon={pokemon2}
+              isWinner={pokemon2Name === winner || winner === "Tie"}
+            />
+          ) : null}
         </div>
 
-        <div className="row">     
-            <button
-              className="button-compare"
-              onClick={(e) => versus()}
-            >
-              Versus
-            </button> 
+        <div className="row">
+          <button className="button-compare" onClick={(e) => versus()}>
+            Versus
+          </button>
         </div>
       </div>
     </div>

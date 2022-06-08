@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-html, 
+html,
 body {
   background-color: #1b1b32;
 }
@@ -61,13 +61,9 @@ body {
   justify-content: center;
   align-items: center;
   display: flex;
-  flex: 1; 
+  flex: 1;
 }
 
 .button-compare:hover {
   background-color: #00471b;
-  /* background-color: #feca1b; */
-
 }
-
-

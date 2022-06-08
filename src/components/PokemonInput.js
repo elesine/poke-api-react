@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import "../styles/Form.css";
+import "../styles/PokemonInput.css";
 
-function Form( {setPokemonName} ) {
+function Form({ setPokemonName }) {
   const [input, setInput] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("You have submitted name pokemon");
+    // alert("You have submitted name pokemon");
   };
   return (
     <form className="form" onSubmit={handleSubmit}>
       <div className="form-control">
-        <input 
+        <input
           className="input"
           type="text"
           id={input}
@@ -20,7 +21,13 @@ function Form( {setPokemonName} ) {
           onChange={(e) => setInput(e.target.value)}
         />
       </div>
-      <button className="button-input" type="submit" onClick={()=>setPokemonName(input)}>Add pokemon</button>
+      <button
+        className="button-input"
+        type="submit"
+        onClick={() => setPokemonName(input)}
+      >
+        Add pokemon
+      </button>
     </form>
   );
 }

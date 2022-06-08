@@ -1,17 +1,17 @@
 import "../styles/Pokemon.css";
 
-function Pokemon({ name, pokemon, win}) {
+function Pokemon({ pokemon, isWinner }) {
   return (
-    <div className={`pokemon-contenedor ${win? 'winner' :  ''}`.trimEnd()}>
+    <div className={`pokemon-contenedor ${isWinner ? "winner" : ""}`.trimEnd()}>
       <p className="pokemon-name">
-        <strong>{win? 'El Ganador es ':''}</strong>
-        <strong>{name}</strong>
+        <strong>{isWinner ? "The winner is " : ""}</strong>
+        <strong>{pokemon.name}</strong>
       </p>
       <img
-        className='pokemon-img'
+        className="pokemon-img"
         src={pokemon.sprites.other.dream_world.front_default}
-        id={name}
-        alt={name}
+        id={pokemon.name}
+        alt={pokemon.name}
       />
     </div>
   );
