@@ -16,24 +16,40 @@ function App() {
 
   useEffect(() => {
     if (pokemon1Name !='') {
-    const getAnswer = async () => {
-      const response = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/${pokemon1Name}`
-      );
-      setPokemon1(response.data);
-    };
-    getAnswer();
-  }
+      const getAnswer = async () => {
+        try{
+          const response = await axios.get(
+            `https://pokeapi.co/api/v2/pokemon/${pokemon1Name}`
+          );
+          if(response.status == 200) {
+            setPokemon1(response.data);
+          }
+        }
+        catch (error) {
+          console.log(error);
+          alert(`Error name pokemon. ${error.response.data}`);
+        }
+      };
+      getAnswer();
+    }
   }, [pokemon1Name]);
 
   useEffect(() => {
-   if (pokemon2Name !='') {
-    const getAnswer = async () => {
-      const response = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/${pokemon2Name}`
-      );
-      setPokemon2(response.data);
-    };
+    if (pokemon2Name !='') {
+      const getAnswer = async () => {
+        try{
+          const response = await axios.get(
+            `https://pokeapi.co/api/v2/pokemon/${pokemon2Name}`
+          );
+          if(response.status == 200) {
+            setPokemon2(response.data);
+          }
+        }
+        catch (error) {
+          console.log(error);
+          alert(`Error name pokemon. ${error.response.data}`);
+        }
+      };
     getAnswer();
   }
   }, [pokemon2Name]);
@@ -41,8 +57,17 @@ function App() {
   useEffect(() => {
     if (pokemon1 != '') {
       const getAnswer = async () => {
-        const response = await axios.get(pokemon1.types[0].type.url);
-        setPokemon1Type(response.data);
+        try{
+          const response = await axios.get(pokemon1.types[0].type.url);
+          if(response.status == 200) {
+            setPokemon1Type(response.data);
+          }
+        }
+        catch (error) {
+          console.log(error);
+          alert(`Error finding Pokemon Type. ${error.response.data}`);
+        }
+
       };
       getAnswer();
     }
@@ -51,8 +76,16 @@ function App() {
   useEffect(() => {
     if (pokemon2 != '') {
       const getAnswer = async () => {
-        const response = await axios.get(pokemon2.types[0].type.url);
-        setPokemon2Type(response.data);
+        try{
+          const response = await axios.get(pokemon2.types[0].type.url);
+          if(response.status == 200) {
+            setPokemon2Type(response.data);
+          }
+        }
+        catch (error) {
+          console.log(error);
+          alert(`Error finding Pokemon Type. ${error.response.data}`);
+        }
       };
       getAnswer();
     }

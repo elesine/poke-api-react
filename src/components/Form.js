@@ -3,7 +3,6 @@ import "../styles/Form.css";
 
 function Form( {setPokemonName} ) {
   const [input, setInput] = useState("");
-//  const [submittedInput, setSubmittedInput] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
     alert("You have submitted name pokemon");
