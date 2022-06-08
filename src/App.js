@@ -116,7 +116,6 @@ function App() {
         console.log("It is a " + winner);
       }
     }
-    console.log("Winner!!! " + winner);
   }
 
   return (
@@ -124,6 +123,7 @@ function App() {
       <div className="pokeapi-logo-container">
         <img className="pokeapi-logo" src={pokeApiLogo} alt="PokeApi Logo" />
       </div>
+
       <div className="main-container">
         <div className="row">
           <Form setPokemonName={setPokemon1Name} ></Form>
