@@ -14,11 +14,11 @@ function App() {
   const [pokemon2Type, setPokemon2Type] = useState("");
   const [winner, setWinner] = useState("");
 
-  const getAnswer = async (url, setPokemon) => {
+  const callApi = async (url, callback) => {
     try {
       const response = await axios.get(url);
       if (response.status === 200) {
-        setPokemon(response.data);
+        callback(response.data);
       }
     } catch (error) {
       console.log("Error Endpoint: ", url);
@@ -29,7 +29,7 @@ function App() {
 
   useEffect(() => {
     if (pokemon1Name !== "") {
-      getAnswer(
+      callApi(
         `https://pokeapi.co/api/v2/pokemon/${pokemon1Name}`,
         setPokemon1
       );
@@ -38,7 +38,7 @@ function App() {
 
   useEffect(() => {
     if (pokemon2Name !== "") {
-      getAnswer(
+      callApi(
         `https://pokeapi.co/api/v2/pokemon/${pokemon2Name}`,
         setPokemon2
       );
@@ -47,13 +47,13 @@ function App() {
 
   useEffect(() => {
     if (pokemon1 !== "") {
-      getAnswer(pokemon1.types[0].type.url, setPokemon1Type);
+      callApi(pokemon1.types[0].type.url, setPokemon1Type);
     }
   }, [pokemon1]);
 
   useEffect(() => {
     if (pokemon2 !== "") {
-      getAnswer(pokemon2.types[0].type.url, setPokemon2Type);
+      callApi(pokemon2.types[0].type.url, setPokemon2Type);
     }
   }, [pokemon2]);
 
@@ -76,8 +76,8 @@ function App() {
         setWinner(pokemon2Name);
         console.log("The winner is: " + pokemon2Name);
       } else {
-        setWinner("Tie");
-        console.log("It is a " + winner);
+        setWinner("both");
+        console.log("The winners are " + winner);
       }
     }
   }
@@ -98,14 +98,14 @@ function App() {
           {pokemon1 ? (
             <Pokemon
               pokemon={pokemon1}
-              isWinner={pokemon1Name === winner || winner === "Tie"}
+              isWinner={pokemon1Name === winner || winner === "both"}
             />
           ) : null}
 
           {pokemon2 ? (
             <Pokemon
               pokemon={pokemon2}
-              isWinner={pokemon2Name === winner || winner === "Tie"}
+              isWinner={pokemon2Name === winner || winner === "both"}
             />
           ) : null}
         </div>

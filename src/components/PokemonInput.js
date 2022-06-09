@@ -4,12 +4,8 @@ import "../styles/PokemonInput.css";
 function Form({ setPokemonName }) {
   const [input, setInput] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // alert("You have submitted name pokemon");
-  };
   return (
-    <form className="form" onSubmit={handleSubmit}>
+    <div className="form">
       <div className="form-control">
         <input
           className="input"
@@ -28,7 +24,7 @@ function Form({ setPokemonName }) {
       >
         Add pokemon
       </button>
-    </form>
+    </div>
   );
 }
 
